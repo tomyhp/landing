@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   rules:
-  - host: tomy.sdcilsy-delta.my.id
+  - host: tomy.lopunya.id
     http:
       paths:
       #- path: /belajar
