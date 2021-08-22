@@ -4,7 +4,7 @@ pipeline {
         stage ('Build landingpage') {
             steps {
                 sh '''
-                    sudo docker build -t tomyhp/landingpage:$GIT_BRANCH-$BUILD_ID -f landingpage/Dockerfile .
+                    sudo docker build -t tomyhp/landingpage:$GIT_BRANCH-$BUILD_ID -f landing/Dockerfile .
                     sudo docker login -u tomyhp -p$DOCKER_TOKEN
                     sudo docker push tomyhp/landingpage:$GIT_BRANCH-$BUILD_ID
                 '''
