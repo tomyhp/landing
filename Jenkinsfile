@@ -13,9 +13,9 @@ pipeline {
         stage ('Change manifest file and send') {
             steps {
                 sh '''
-                    sed -i -e "s/branch/$GIT_BRANCH/" kube/landing-page/landingpage.yml
-                    sed -i -e "s/appversion/$BUILD_ID/" kube/landing-page/landingpage.yml
-                    tar -czvf manifest.tar.gz kube/*
+                    sed -i -e "s/branch/$GIT_BRANCH/" Kube/landing-page/landingpage.yml
+                    sed -i -e "s/appversion/$BUILD_ID/" Kube/landing-page/landingpage.yml
+                    tar -czvf manifest.tar.gz Kube/*
                 '''
                 sshPublisher(
                     continueOnError: false, 
@@ -34,9 +34,9 @@ pipeline {
             steps {
                 sshagent(credentials : ['kube-master-tomy']){
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest.tar.gz'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./kube/namespace/'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./kube/landing-page'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./kube/ingress/'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./Kube/namespace/'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./Kube/landing-page'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./Kube/ingress-nginx/'
                 }
             }
         }
