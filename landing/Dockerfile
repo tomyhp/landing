@@ -1,16 +1,6 @@
-FROM ubuntu:bionic
-RUN apt-get update
-RUN apt-get install -y nginx php-fpm php-mysql systemd
-RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
-RUN sed -i -e "s/;\?daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.2/fpm/php-fpm.conf
-RUN echo "\nclear_env = no" >> /etc/php/7.2/fpm/pool.d/www.conf
+FROM nginx:alpine
 #COPY FILE
-COPY . /var/www/html/
+COPY landingpage/ /var/www/html/
 # Nginx config
-RUN rm /etc/nginx/sites-enabled/default
-ADD ./landing-page.conf /etc/nginx/sites-available/
-RUN ln -s /etc/nginx/sites-available/landing-page.conf /etc/nginx/sites-enabled/landing-page.conf
-# Expose ports.
-EXPOSE 80
-# RUN PHP and NGINX
-CMD /etc/init.d/php7.2-fpm start && nginx
+RUN rm /etc/nginx/conf.d/default.conf
+COPY landingpage/ops/landing-page.conf /etc/nginx/conf.d/
