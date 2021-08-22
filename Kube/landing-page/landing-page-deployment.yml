@@ -17,6 +17,7 @@ spec:
     spec:
       containers:
       - name: landing-page
+        imagePullPolicy: Always
         image: tomyhp/landing-page:branch-appversion
         ports:
         - containerPort: 80
