@@ -60,7 +60,7 @@ pipeline {
             steps {
             script {
 		    if (BRANCH_NAME == 'main'){	
-                sshagent(credentials : ['kube-master-tomy']){
+                sshagent(credentials : ['kube-master-tomy'])
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-production.tar.gz'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/'
                 } 
@@ -73,6 +73,6 @@ pipeline {
              }
            }
         }
-  }
+   }
 }            
  
