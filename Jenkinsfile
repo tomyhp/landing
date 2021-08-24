@@ -9,6 +9,7 @@ pipeline {
                     sudo docker push tomyhp/landing-page:$GIT_BRANCH-$BUILD_ID
                 '''
             }
+          }
         }
         stage ('Change manifest file and send') {
             steps {
@@ -27,9 +28,9 @@ pipeline {
                             configName: "kube-master-tomy",
                             transfers: [sshTransfer(sourceFiles: 'manifest-production.tar.gz', remoteDirectory: 'jenkins/')],
                             verbose: true
-                        )
-                    ]
-                )
+                           )
+                        ]
+                    )
                 } else {
                 sh '''
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-staging/landing-page/landing-page-deployment.yml
@@ -44,14 +45,14 @@ pipeline {
                             configName: "kube-master-tomy",
                             transfers: [sshTransfer(sourceFiles: 'manifest-staging.tar.gz', remoteDirectory: 'jenkins/')],
                             verbose: true
-                        )
-                    ]
-                )
-                }
-            } 
+                            )
+                        ]
+                     )
+                   }
+                } 
 	    	}
-          }
-       }
+        }
+          
     
         stage ('Deploy to kubernetes cluster') {
             steps {
@@ -64,9 +65,10 @@ pipeline {
                 sshagent(credentials : ['kube-master-tomy'])
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest.tar.gz'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-staging/'
-                }
-            }
+                 }
+               }
+             }
+           }
         }
-     }
-  }
-}
+    }          
+ 
