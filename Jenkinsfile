@@ -56,7 +56,7 @@ pipeline {
         }
           
     
-        stage ('Deploy to kubernetes cluster production') {
+        stage ('Deploy to kubernetes cluster') {
             when {branch 'main'}
             steps {	
                 sshagent(credentials : ['kube-master-tomy']){
@@ -64,8 +64,7 @@ pipeline {
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/'
                 }
             }
-        }    
-        stage ('Deploy to kubernetes cluster staging') { 
+          
             when {not{branch 'main'}}
             steps {
                 sshagent(credentials : ['kube-master-tomy']){
@@ -74,7 +73,7 @@ pipeline {
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-staging/landing-page'
             }
           }
-        }
+        }  
     }  
     
 }        
