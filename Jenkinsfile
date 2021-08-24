@@ -31,7 +31,8 @@ pipeline {
                            )
                         ]
                     )
-                } else {
+                } 
+                else {
                 sh '''
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-staging/landing-page/landing-page-deployment.yml
                     sed -i -e "s/appversion/$BUILD_ID/" Kube-staging/landing-page/landing-page-deployment.yml
@@ -48,20 +49,21 @@ pipeline {
                             )
                         ]
                      )
-                   }
-                } 
-	    	}
+                  }
+             } 
+	      }
         }
           
     
-        stage ('Deploy to kubernetes cluster') {
+        /*stage ('Deploy to kubernetes cluster') {
             steps {
             script {
 		    if (BRANCH_NAME == 'main'){	
                 sshagent(credentials : ['kube-master-tomy']){
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest.tar.gz'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production'
-                } else {
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/'
+                } 
+                else {
                 sshagent(credentials : ['kube-master-tomy'])
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest.tar.gz'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-staging/'
@@ -69,6 +71,6 @@ pipeline {
                }
              }
            }
-        }
+        }*/
     }          
  
