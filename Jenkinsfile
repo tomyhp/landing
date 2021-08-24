@@ -56,7 +56,7 @@ pipeline {
         }
           
     
-        /*stage ('Deploy to kubernetes cluster') {
+        stage ('Deploy to kubernetes cluster') {
             steps {
             script {
 		    if (BRANCH_NAME == 'main'){	
@@ -72,7 +72,7 @@ pipeline {
                }
              }
            }
-        }*/
+        }
   }
 }            
  
