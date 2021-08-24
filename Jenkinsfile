@@ -11,7 +11,7 @@ pipeline {
             }
           }
         }
-        /*stage ('Change manifest file and send') {
+        stage ('Change manifest file and send') {
             steps {
                 script {
 		        if (BRANCH_NAME == 'main'){
@@ -52,7 +52,7 @@ pipeline {
                   }
              } 
 	      }
-        }*/
+        }
           
     
         /*stage ('Deploy to kubernetes cluster') {
