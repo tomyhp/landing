@@ -13,7 +13,7 @@ pipeline {
         stage ('Change manifest file and send') {
             steps {
                 script {
-		If ($GIT_BRANCH == 'main'){
+		If (BRANCH_NAME == 'main'){
                 sh '''
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-production/landing-page/landing-page-deployment.yml
                     sed -i -e "s/appversion/$BUILD_ID/" Kube-production/landing-page/landing-page-deployment.yml
