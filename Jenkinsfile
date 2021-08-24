@@ -63,7 +63,7 @@ pipeline {
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-production.tar.gz'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/'
                 } 
-            when { not {branch 'master'}}
+            when { not {branch 'main'}}
             steps {
                 sshagent(credentials : ['kube-master-tomy'])
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-staging.tar.gz'
