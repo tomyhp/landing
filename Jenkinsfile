@@ -56,24 +56,27 @@ pipeline {
         }
           
     
-        stage ('Deploy to kubernetes cluster') {
+        stage ('Publish Pre-release') {
             when {branch 'main'}
             steps {	
-                sshagent(credentials : ['kube-master-tomy']){
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-production.tar.gz'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/'
-                }
-            }
-          
-            when {not{branch 'main'}}
-            steps {
                 sshagent(credentials : ['kube-master-tomy']){
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-staging.tar.gz'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-staging/namespace'
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-staging/landing-page'
+                }
+            }
+        }    
+        stage ('Publish Release') { 
+            when {not{branch 'main'}}
+            steps {
+                sshagent(credentials : ['kube-master-tomy']){
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-production.tar.gz'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/namespace'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/landing-page'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production/ingress-nginx'
             }
           }
-        }  
+        }
     }  
     
 }        
