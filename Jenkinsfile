@@ -13,6 +13,7 @@ pipeline {
         stage ('Change manifest file and send') {
             steps {
                 script {
+                sh '''
 		If ($GIT_BRANCH == "main"){
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-production/landing-page/landing-page-deployment.yml
                     sed -i -e "s/appversion/$BUILD_ID/" Kube-production/landing-page/landing-page-deployment.yml
@@ -21,6 +22,7 @@ pipeline {
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-staging/landing-page/landing-page-deployment.yml
                     sed -i -e "s/appversion/$BUILD_ID/" Kube-staging/landing-page/landing-page-deployment.yml
                     tar -czvf manifest.tar.gz Kube-staging/*
+                '''
                     }
                 } 
                 sshPublisher(
