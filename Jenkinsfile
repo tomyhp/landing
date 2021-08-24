@@ -57,7 +57,7 @@ pipeline {
           
     
         stage ('Publish Pre-release') {
-            when {branch 'main'}
+            when {branch 'staging'}
             steps {	
                 sshagent(credentials : ['kube-master-tomy']){
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-staging.tar.gz'
@@ -67,7 +67,7 @@ pipeline {
             }
         }    
         stage ('Publish Release') { 
-            when {not{branch 'main'}}
+            when {not{branch 'staging'}}
             steps {
                 sshagent(credentials : ['kube-master-tomy']){
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest-production.tar.gz'
