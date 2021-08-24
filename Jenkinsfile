@@ -13,25 +13,39 @@ pipeline {
         stage ('Change manifest file and send') {
             steps {
                 script {
-		if (BRANCH_NAME == 'main'){
+		        if (BRANCH_NAME == 'main'){
                 sh '''
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-production/landing-page/landing-page-deployment.yml
                     sed -i -e "s/appversion/$BUILD_ID/" Kube-production/landing-page/landing-page-deployment.yml
-                    tar -czvf manifest.tar.gz Kube-production/*
+                    tar -czvf manifest-production.tar.gz Kube-production/*
                     } else {
                     sed -i -e "s/branch/$GIT_BRANCH/" Kube-staging/landing-page/landing-page-deployment.yml
                     sed -i -e "s/appversion/$BUILD_ID/" Kube-staging/landing-page/landing-page-deployment.yml
-                    tar -czvf manifest.tar.gz Kube-staging/*
+                    tar -czvf manifest-staging.tar.gz Kube-staging/*
                 '''
                     }
                 } 
+		        script {
+		        if (BRANCH_NAME == 'main'){
                 sshPublisher(
                     continueOnError: false, 
                     failOnError: true,
                     publishers: [
                         sshPublisherDesc(
                             configName: "kube-master-tomy",
-                            transfers: [sshTransfer(sourceFiles: 'manifest.tar.gz', remoteDirectory: 'jenkins/')],
+                            transfers: [sshTransfer(sourceFiles: 'manifest-production.tar.gz', remoteDirectory: 'jenkins/')],
+                            verbose: true
+                        )
+                    ]
+                )
+                } else {
+                    sshPublisher(
+                    continueOnError: false, 
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "kube-master-tomy",
+                            transfers: [sshTransfer(sourceFiles: 'manifest-staging.tar.gz', remoteDirectory: 'jenkins/')],
                             verbose: true
                         )
                     ]
@@ -40,10 +54,14 @@ pipeline {
         }
         stage ('Deploy to kubernetes cluster') {
             steps {
+            script {
+		    if (BRANCH_NAME == 'main'){	
                 sshagent(credentials : ['kube-master-tomy']){
                     sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest.tar.gz'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./Kube/Kube-production/'
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f ./Kube/Kube-staging/'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-production'
+                } else {
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id tar -xvzf jenkins/manifest.tar.gz'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@api.lopunya.id kubectl apply -f /home/ubuntu/Kube-staging/'
                 }
             }
         }
