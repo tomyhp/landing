@@ -1,3 +1,3 @@
 FROM nginx:alpine
 
-ADD landingpage/ /usr/share/nginx/html
+ADD landing/ /usr/share/nginx/html
